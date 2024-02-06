@@ -57,44 +57,24 @@ string lireString(istream& fichier)
 }
 
 #pragma endregion//}
-//PROBLEME AUX LIGNES 71 et 182
 
-//TODO: Une fonction pour ajouter un Film à une ListeFilms, le film existant déjà;
-// on veut uniquement ajouter le pointeur vers le film existant.  C
-// ette fonction doit doubler la taille du tableau alloué, avec au minimum un élément,
-// dans le cas où la capacité est insuffisante pour ajouter l'élément.  Il faut alors allouer
-// un nouveau tableau plus grand, copier ce qu'il y avait dans l'ancien, et éliminer l'ancien
-// trop petit.  Cette fonction ne doit copier aucun Film ni Acteur, elle doit copier uniquement des p
-// ointeurs.
-
-//        CETTE FONCTION A UN PROBLEME JE SAIS PAS C'EST QOI!!!
 void ajouterFilmListeFilms(ListeFilms& listeFilms, Film* film){
-    bool filmDejaPresent = false;
-    for (int i = 0; i < listeFilms.nElements; ++i) {
-        if (listeFilms.elements[i] == film) {
-            filmDejaPresent = true;
-            break;
-        }
+    bool estCapaciteInsuffisante = listeFilms.capacite <= listeFilms.nElements;
+    if (estCapaciteInsuffisante) {
+        listeFilms.capacite = listeFilms.nElements;
+        listeFilms.capacite = (listeFilms.capacite == 0) ? 1 : listeFilms.capacite * 2;
+
+        Film** nouvelleListeFilms = new Film* [listeFilms.capacite];
+
+        copy(listeFilms.elements, listeFilms.elements + listeFilms.nElements, nouvelleListeFilms);
+
+        delete[] listeFilms.elements;
+
+        listeFilms.elements = nouvelleListeFilms;
     }
-    if (!filmDejaPresent) {
-        bool estCapaciteInsuffisante = listeFilms.capacite <= listeFilms.nElements;
-        if (estCapaciteInsuffisante) {
-            listeFilms.capacite = listeFilms.nElements;
-            listeFilms.capacite = (listeFilms.capacite == 0) ? 1 : listeFilms.capacite * 2;
-
-            Film **nouvelleListeFilms = new Film *[listeFilms.capacite];
-
-            copy(listeFilms.elements, listeFilms.elements + listeFilms.nElements, nouvelleListeFilms);
-            for(int i : range(listeFilms.nElements)){
-                delete listeFilms.elements[i];
-            }
-            delete[] listeFilms.elements;
-
-            listeFilms.elements = nouvelleListeFilms;
-        }
-        listeFilms.elements[listeFilms.nElements++] = film;
-    }
+    listeFilms.elements[listeFilms.nElements++] = film;
 }
+
 //TODO: Une fonction pour enlever un Film d'une ListeFilms (enlever le pointeur) sans effacer le film;
 // la fonction prenant en paramètre un pointeur vers le film à enlever.  L'ordre des films dans l
 // a liste n'a pas à être conservé.
@@ -106,8 +86,7 @@ void enleverFilmListeFilms(ListeFilms& listeFilms, Film* film){
         bool filmTrouve = nomFilm == listeFilms.elements[i]->titre;
         if(!filmTrouve){
             listeFilms.elements[nElementApresSuprresion++] = listeFilms.elements[i];
-        }
-        else{
+        }else{
             delete film;
         }
     }
@@ -141,7 +120,8 @@ Acteur* lireActeur(istream& fichier)
     Acteur* acteurExistant = trouverActeurListeFilms(acteur.joueDans, acteur.nom);
 
     bool acteurEstNullptr = acteurExistant == nullptr;
-    Acteur* acteurCree = &acteur;
+    Acteur* acteurCree = new Acteur;
+    *acteurCree =  acteur;
     if(acteurEstNullptr){
         cout << "Nom de l'acteur ajouté: " << acteurCree->nom << '\n';
         return acteurCree;
@@ -172,12 +152,15 @@ Film* lireFilm(istream& fichier)
     film.acteurs.capacite = film.acteurs.nElements;
     Acteur** listeActeurs = new Acteur*[film.acteurs.nElements] ;
     film.acteurs.elements = listeActeurs;
-    Film* newFilm = &film;
+
+    Film* newFilm = new Film;
+    *newFilm = film;
 	for (int i = 0; i < film.acteurs.nElements; i++) {
         //TODO: Placer l'acteur au bon endroit dans les acteurs du film.
-        film.acteurs.elements[i] = lireActeur(fichier);
+        newFilm->acteurs.elements[i] = lireActeur(fichier);
 
         //TODO: Ajouter le film à la liste des films dans lesquels l'acteur joue.
+        ajouterFilmListeFilms(film.acteurs.elements[i]->joueDans, newFilm);
 
 //        CETTE FONCTION A UN PROBLEME JE SAIS PAS C'EST QOI!!!
 //        ajouterFilmListeFilms(film.acteurs.elements[i]->joueDans, newFilm);
@@ -239,9 +222,10 @@ void afficherActeur(const Acteur& acteur)
 // (en utilisant la fonction afficherActeur ci-dessus).
 void afficherFilm(const Film& film){
     cout << film.titre << '\n';
-    for(int i : range(film.acteurs.nElements)){
-        afficherActeur(*film.acteurs.elements[i]);
+    for(auto acteur: span(film.acteurs.elements, film.acteurs.nElements)){
+        afficherActeur(*acteur);
     }
+
 }
 
 
@@ -287,7 +271,7 @@ int main()
 	
 	cout << ligneDeSeparation << "Le premier film de la liste est:" << endl;
 	//TODO: Afficher le premier film de la liste.  Devrait être Alien.
-    afficherFilm(*listeFilms.elements[1]);
+    afficherFilm(*listeFilms.elements[0]);
 	
 	cout << ligneDeSeparation << "Les films sont:" << endl;
 	//TODO: Afficher la liste des films.  Il devrait y en avoir 7.
@@ -307,10 +291,10 @@ int main()
 	//TODO: Détruire et enlever le premier film de la liste (Alien).
     // Ceci devrait "automatiquement" (par ce que font vos fonctions) détruire les acteurs
     // Tom Skerritt et John Hurt, mais pas Sigourney Weaver puisqu'elle joue aussi dans Avatar.
-    detruireMemoireFilm(listeFilms.elements[1]);
+    detruireMemoireFilm(listeFilms.elements[0]);
 	cout << ligneDeSeparation << "Les films sont maintenant:" << endl;
 	//TODO: Afficher la liste des films.
-    afficherListeFilms(listeFilms);
+//    afficherListeFilms(listeFilms);
 	
 	//TODO: Faire les appels qui manquent pour avoir 0% de lignes non exécutées dans le programme
     // (aucune ligne rouge dans la couverture de code; c'est normal que les lignes de "new"
@@ -323,3 +307,4 @@ int main()
     // des delete.
     detruireListeFilms(listeFilms);
 }
+
