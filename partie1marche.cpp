@@ -186,10 +186,7 @@ void detruireListeFilms(ListeFilms& listeFilms) {
 
 void afficherActeur(const Acteur& acteur)
 {
-    bool acteurPresent = (acteur.sexe == 'M') || (acteur.sexe == 'F');
-    if (acteurPresent) {
-        cout << "  " << acteur.nom << ", " << acteur.anneeNaissance << " " << acteur.sexe << endl;
-    }
+    cout << "  " << acteur.nom << ", " << acteur.anneeNaissance << " " << acteur.sexe << endl;
 }
 
 void afficherListeFilms(const ListeFilms& listeFilms) {
