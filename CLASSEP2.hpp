@@ -17,12 +17,14 @@ public:
     void afficherFilmographieActeur(ListeFilms& listeFilms,const std::string& nomActeur);
     void setCapacite(int capacite);
     void setElements(Film** elements);
+    void setNElements(int nElements);
     Acteur* trouverActeurListeFilms(const std::string& nomActeur);
-    void ajouterFilmListeFilms(ListeFilms& listeFilms, Film* film);
-    void enleverFilmListeFilms( ListeFilms& lsiteFilms,Film* film);
+    static void ajouterFilmListeFilms(ListeFilms& listeFilms, Film* film);
+    static void enleverFilmListeFilms( ListeFilms& listeFilms,Film* film);
     void afficherListeFilms(const ListeFilms& listeFilms) const;
     void detruireListeFilms(ListeFilms& listeFilms);
     void detruireMemoireFilm(Film* film);
+    void setFilminElement( int index, Film* film);
     ListeFilms creerListe(std::string nomFichier);
 
 private:
@@ -49,3 +51,8 @@ struct Acteur
     std::string nom; int anneeNaissance; char sexe;
     ListeFilms joueDans;
 };
+
+
+
+
+
