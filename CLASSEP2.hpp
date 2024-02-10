@@ -17,9 +17,9 @@ public:
 
     void setCapacite(int capacite);
     void setElements(Film** elements);
-
-    void ajouterFilmListeFilms(ListeFilms& listeFilms, Film* film);
-    void enleverFilmListeFilms(ListeFilms& listeFilms, Film* film);
+    Acteur* trouverActeurListeFilms(const string& nomActeur);
+    void ajouterFilmListeFilms( Film* film);
+    void enleverFilmListeFilms( Film* film);
     void afficherListeFilms(const ListeFilms& listeFilms) const;
     void detruireListeFilms(ListeFilms& listeFilms);
     void detruireMemoireFilm(Film* film);
@@ -49,3 +49,8 @@ struct Acteur
     std::string nom; int anneeNaissance; char sexe;
     ListeFilms joueDans;
 };
+
+
+
+
+
