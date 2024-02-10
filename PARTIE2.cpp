@@ -35,10 +35,14 @@ T lireType(istream& fichier)
     return valeur;
 }
 #define erreurFataleAssert(message) assert(false&&(message)),terminate()
+
+//DECLARATION DES FONCTIONS NE FAISANT PAS PARTIE DE LA CLASSE
 void afficherActeur(const Acteur& acteur);
 Film* lireFilm(istream& fichier, ListeFilms& listeFilms);
 Acteur* lireActeur(istream& fichier, const  ListeFilms& listeFilms);
 Acteur* trouverActeurListeFilms(const ListeFilms& listeFilms, const string& nomActeur);
+
+
 static const uint8_t enteteTailleVariableDeBase = 0xA0;
 size_t lireUintTailleVariable(istream& fichier)
 {
