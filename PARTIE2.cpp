@@ -192,10 +192,7 @@ void ListeFilms::afficherFilmographieActeur(const ListeFilms& listeFilms, const 
 //////////////////////////////////////////////  FONCTIONS DES STRUCTURES ////////////////////////////////////////////////////////////////////
 void afficherActeur(const Acteur& acteur)
 {
-    bool acteurPresent = (acteur.sexe == 'M') || (acteur.sexe == 'F');
-    if (acteurPresent) {
-        cout << "  " << acteur.nom << ", " << acteur.anneeNaissance << " " << acteur.sexe << endl;
-    }
+    cout << "  " << acteur.nom << ", " << acteur.anneeNaissance << " " << acteur.sexe << endl;
 }
 
 Film* lireFilm(istream& fichier, ListeFilms& listeFilms)
