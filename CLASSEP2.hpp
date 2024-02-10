@@ -7,27 +7,26 @@ struct Film; struct Acteur; // Permet d'utiliser les types alors qu'ils seront d
 
 class ListeFilms {
 public:
+
+    //initialisateur et destructeur
     ListeFilms();
     ~ListeFilms();
+    
+    //trouver chercher les valeurs des elements
+    int trouverNElements() const;
+    Film** trouverElements() const;
 
-    //int getCapacite() const;
-    int getNElements() const;
-    Film** getElements() const;
-
+    //Methode de la classe nessessaires pour son fonctionnement
     void afficherFilmographieActeur(const ListeFilms& listeFilms, const std::string& nomActeur);
-   /* void setCapacite(int capacite);
-    void setElements(Film** elements);
-    void setNElements(int nElements);*/
-    //Acteur* trouverActeurListeFilms(const ListeFilms& listeFilms, const string& nomActeur);
-    static void ajouterFilmListeFilms(ListeFilms& listeFilms, Film* film);
-    static void enleverFilmListeFilms(ListeFilms& listeFilms, Film* film);
+    void ajouterFilmListeFilms(ListeFilms& listeFilms, Film* film);
+    void enleverFilmListeFilms(ListeFilms& listeFilms, Film* film);
     void afficherListeFilms(const ListeFilms& listeFilms) const;
     void detruireListeFilms(ListeFilms& listeFilms);
-    //void setFilminElement(int index, Film* film);
     void detruireFilm(Film* film, ListeFilms& listeFilms);
     ListeFilms creerListe(std::string nomFichier);
 
 private:
+    // attributs privees de la classe
     int capacite_;
     int nElements_;
     Film** elements_ = {};
