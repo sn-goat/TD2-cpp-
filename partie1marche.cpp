@@ -162,26 +162,6 @@ ListeFilms creerListe(string nomFichier)
     return listeFilms;
 }
 
-//void detruireMemoireFilm(Film* film) {
-//    for (auto acteur : span(film->acteurs.elements, film->acteurs.nElements)) {
-//        bool acteurPresent = (acteur->sexe == 'M') || (acteur->sexe == 'F');
-//        if (acteurPresent) {
-//            cout << "Nom de l'acteur détruit: " << acteur->nom << '\n';
-//            for (auto filmDansListe : span(acteur->joueDans.elements, acteur->joueDans.nElements)) {
-//                enleverFilmListeFilms(acteur->joueDans, filmDansListe);
-//            }
-//            delete[] acteur->joueDans.elements;
-//            acteur->joueDans.elements = nullptr;
-//            delete acteur;
-//            acteur = nullptr;
-//        }
-//
-//    }
-//    delete[] film->acteurs.elements;
-//    film->acteurs.elements = nullptr;
-//    delete film;
-//    film = nullptr;
-//}
 void detruireFilm(Film* film, ListeFilms& listeFilms) {
     enleverFilmListeFilms( listeFilms, film );
     for (Acteur* acteur : span(film->acteurs.elements, film->acteurs.nElements)) {
@@ -204,7 +184,6 @@ void detruireListeFilms(ListeFilms& listeFilms) {
     delete[] listeFilms.elements;
 }
 
-
 void afficherActeur(const Acteur& acteur)
 {
     bool acteurPresent = (acteur.sexe == 'M') || (acteur.sexe == 'F');
@@ -212,19 +191,6 @@ void afficherActeur(const Acteur& acteur)
         cout << "  " << acteur.nom << ", " << acteur.anneeNaissance << " " << acteur.sexe << endl;
     }
 }
-
-//void afficherFilm(const Film& film) {
-//    cout << "Titre: " << film.titre << endl;
-//    cout << "Réalisateur: " << film.realisateur << endl;
-//    cout << "Année de sortie: " << film.anneeSortie << endl;
-//    cout << "Recette: " << film.recette << endl;
-//    cout << "Acteurs:" << endl;
-//    for (int i = 0; i < film.acteurs.nElements; ++i) {
-//        cout << "  - " << film.acteurs.elements[i]->nom << endl;
-//    }
-//}
-
-
 
 void afficherListeFilms(const ListeFilms& listeFilms) {
     static const string ligneDeSeparation = "----------------------------------------\n";
@@ -239,7 +205,6 @@ void afficherListeFilms(const ListeFilms& listeFilms) {
         cout << ligneDeSeparation;
     }
 }
-
 
 void afficherFilmographieActeur(const ListeFilms& listeFilms, const string& nomActeur)
 {
