@@ -10,21 +10,21 @@ public:
     ListeFilms();
     ~ListeFilms();
 
-    int getCapacite() const;
+    //int getCapacite() const;
     int getNElements() const;
     Film** getElements() const;
 
-    void afficherFilmographieActeur(ListeFilms& listeFilms,const std::string& nomActeur);
-    void setCapacite(int capacite);
+    void afficherFilmographieActeur(const ListeFilms& listeFilms, const std::string& nomActeur);
+   /* void setCapacite(int capacite);
     void setElements(Film** elements);
-    void setNElements(int nElements);
-    Acteur* trouverActeurListeFilms(const std::string& nomActeur);
+    void setNElements(int nElements);*/
+    //Acteur* trouverActeurListeFilms(const ListeFilms& listeFilms, const string& nomActeur);
     static void ajouterFilmListeFilms(ListeFilms& listeFilms, Film* film);
-    static void enleverFilmListeFilms( ListeFilms& listeFilms,Film* film);
+    static void enleverFilmListeFilms(ListeFilms& listeFilms, Film* film);
     void afficherListeFilms(const ListeFilms& listeFilms) const;
     void detruireListeFilms(ListeFilms& listeFilms);
-    void detruireMemoireFilm(Film* film);
-    void setFilminElement( int index, Film* film);
+    //void setFilminElement(int index, Film* film);
+    void detruireFilm(Film* film, ListeFilms& listeFilms);
     ListeFilms creerListe(std::string nomFichier);
 
 private:
@@ -51,8 +51,3 @@ struct Acteur
     std::string nom; int anneeNaissance; char sexe;
     ListeFilms joueDans;
 };
-
-
-
-
-
