@@ -94,7 +94,7 @@ void ListeFilms::setElements(Film** elements) {
     elements_ = elements;
 }
 
-void ListeFilms::ajouterFilmListeFilms (Film* film) {
+void ListeFilms::ajouterFilmListeFilms (ListeFilms& listeFilms,Film* film) {
     bool estCapaciteInsuffisante = nElements_ == capacite_;
     if (estCapaciteInsuffisante) {
         setCapacite((capacite_ == 0) ? 1 : capacite_ * 2);
@@ -109,7 +109,7 @@ void ListeFilms::ajouterFilmListeFilms (Film* film) {
     ++nElements_;
 }
 
-void ListeFilms::enleverFilmListeFilms( Film* film) {
+void ListeFilms::enleverFilmListeFilms(ListeFilms& lsiteFilms, Film* film) {
     const string nomFilm = film->titre;
     for (int i = 0; i < nElements_; ++i) {
         bool filmTrouve = nomFilm == elements_[i]->titre;
@@ -126,7 +126,7 @@ void ListeFilms::enleverFilmListeFilms( Film* film) {
     }
 }
 Acteur* ListeFilms::trouverActeurListeFilms(const string& nomActeur) {
-    for (auto* filmDansListe : span(listeFilms.getElements(), listeFilms.getNElements())) {
+    for (auto* filmDansListe : span(elements_, nElements_)) {
         for (int valeur : range(filmDansListe->acteurs.nElements)) {
             bool acteurTrouve = filmDansListe->acteurs.elements[valeur]->nom == nomActeur;
             if (acteurTrouve) {
@@ -144,7 +144,7 @@ Acteur* lireActeur(istream& fichier, ListeFilms& listeFilms)
     acteur.anneeNaissance = int(lireUintTailleVariable(fichier));
     acteur.sexe = char(lireUintTailleVariable(fichier));
 
-    Acteur* acteurExistant = trouverActeurListeFilms(listeFilms, acteur.nom);
+    Acteur* acteurExistant = listeFilms.trouverActeurListeFilms(acteur.nom);
 
     bool acteurEstNullptr = acteurExistant == nullptr;
     if (acteurEstNullptr) {
@@ -191,7 +191,7 @@ ListeFilms  ListeFilms::creerListe(string nomFichier)
 
     ListeFilms listeFilms{};
     for (int i = 0; i < nElements; i++) {
-        listeFilms.ajouterFilmListeFilms(listeFilms, lireFilm(fichier, listeFilms));
+        listeFilms.ajouterFilmListeFilms(listeFilms,lireFilm(fichier, listeFilms));
     }
 
     return listeFilms;
@@ -257,10 +257,10 @@ void ListeFilms::afficherListeFilms(const ListeFilms& listeFilms) const {
 
 
 
-void afficherFilmographieActeur(const ListeFilms& listeFilms, const string& nomActeur)
+void ListeFilms::afficherFilmographieActeur(ListeFilms& listeFilms,const string& nomActeur)
 {
 
-    const Acteur* acteur = trouverActeurListeFilms(listeFilms, nomActeur);
+    const Acteur* acteur = listeFilms.trouverActeurListeFilms( nomActeur);
     if (acteur == nullptr)
         cout << "Aucun acteur de ce nom" << endl;
     else
@@ -296,7 +296,7 @@ int main()
     cout << ligneDeSeparation << "Liste des films où Benedict Cumberbatch joue sont:" << endl;
     //TODO: Afficher la liste des films où Benedict Cumberbatch joue.
     // Il devrait y avoir Le Hobbit et Le jeu de l'imitation.
-    afficherFilmographieActeur(listeFilms, benedict_Cumberbacth->nom);
+    listeFilms.afficherFilmographieActeur(listeFilms,benedict_Cumberbacth->nom);
 
     //TODO: Détruire et enlever le premier film de la liste (Alien).
     // Ceci devrait "automatiquement" (par ce que font vos fonctions) détruire les acteurs
