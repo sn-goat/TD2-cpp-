@@ -120,19 +120,16 @@ void ListeFilms::ajouterFilmListeFilms (ListeFilms& listeFilms,Film* film) {
 
 void ListeFilms::enleverFilmListeFilms(ListeFilms& listeFilms, Film* film) {
     const string nomFilm = film->titre;
-    for (int i = 0; i < listeFilms.getNElements(); ++i) {
-        bool filmTrouve = nomFilm == listeFilms.getElements()[i]->titre;
+    for (auto filmDansListe : span(listeFilms.getElements(), listeFilms.getNElements())) {
+        bool filmTrouve = nomFilm == filmDansListe->titre;
         if (filmTrouve) {
-            delete film;
             film = nullptr;
 
-            for (int j = i; j < listeFilms.getNElements() - 1; ++j) {
-                listeFilms.getElements()[j] = listeFilms.getElements()[j + 1];
-            }
-            listeFilms.setNElements(listeFilms.getNElements() - 1);
             break;
         }
+
     }
+
 }
 Acteur* ListeFilms::trouverActeurListeFilms(const string& nomActeur) {
     for (auto* filmDansListe : span(elements_, nElements_)) {
