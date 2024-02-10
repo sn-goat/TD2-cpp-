@@ -93,34 +93,43 @@ void ListeFilms::setCapacite(int capacite) {
 void ListeFilms::setElements(Film** elements) {
     elements_ = elements;
 }
+void ListeFilms::setFilminElement(int index, Film* film) {
+    elements_[index] = film;
 
+}
+void ListeFilms::setNElements(int nElements) {
+    nElements_ = nElements;
+
+}
 void ListeFilms::ajouterFilmListeFilms (ListeFilms& listeFilms,Film* film) {
-    bool estCapaciteInsuffisante = nElements_ == capacite_;
+    bool estCapaciteInsuffisante = listeFilms.getNElements() == listeFilms.getCapacite();
     if (estCapaciteInsuffisante) {
-        setCapacite((capacite_ == 0) ? 1 : capacite_ * 2);
+        listeFilms.setCapacite((listeFilms.getCapacite() == 0) ? 1 : listeFilms.getCapacite() * 2);
 
-        Film** nouvelleListeFilms = new Film * [capacite_];
-        copy(elements_, elements_ + nElements_, nouvelleListeFilms);
+        Film** nouvelleListeFilms = new Film * [listeFilms.getCapacite()];
+        copy(listeFilms.getElements(), listeFilms.getElements() + listeFilms.getNElements(), nouvelleListeFilms);
 
-        delete[] elements_;
-        setElements(nouvelleListeFilms);
+        delete[] listeFilms.getElements();
+        listeFilms.setElements(nouvelleListeFilms);
     }
-    elements_[nElements_] = film;
-    ++nElements_;
+    listeFilms.getElements()[listeFilms.getNElements()] = film;
+   
+    listeFilms.setFilminElement(listeFilms.getNElements(), film);
+    listeFilms.setNElements(listeFilms.getNElements() + 1);
 }
 
-void ListeFilms::enleverFilmListeFilms(ListeFilms& lsiteFilms, Film* film) {
+void ListeFilms::enleverFilmListeFilms(ListeFilms& listeFilms, Film* film) {
     const string nomFilm = film->titre;
-    for (int i = 0; i < nElements_; ++i) {
-        bool filmTrouve = nomFilm == elements_[i]->titre;
+    for (int i = 0; i < listeFilms.getNElements(); ++i) {
+        bool filmTrouve = nomFilm == listeFilms.getElements()[i]->titre;
         if (filmTrouve) {
             delete film;
             film = nullptr;
 
-            for (int j = i; j < nElements_ - 1; ++j) {
-                elements_[j] = elements_[j + 1];
+            for (int j = i; j < listeFilms.getNElements() - 1; ++j) {
+                listeFilms.getElements()[j] = listeFilms.getElements()[j + 1];
             }
-            --nElements_;
+            listeFilms.setNElements(listeFilms.getNElements() - 1);
             break;
         }
     }
