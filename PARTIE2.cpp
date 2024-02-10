@@ -94,7 +94,7 @@ void ListeFilms::setElements(Film** elements) {
     elements_ = elements;
 }
 
-void ListeFilms::ajouterFilmListeFilms(ListeFilms& listeFilms, Film* film) {
+void ListeFilms::ajouterFilmListeFilms (Film* film) {
     bool estCapaciteInsuffisante = nElements_ == capacite_;
     if (estCapaciteInsuffisante) {
         setCapacite((capacite_ == 0) ? 1 : capacite_ * 2);
@@ -109,7 +109,7 @@ void ListeFilms::ajouterFilmListeFilms(ListeFilms& listeFilms, Film* film) {
     ++nElements_;
 }
 
-void ListeFilms::enleverFilmListeFilms(ListeFilms& listeFilms, Film* film) {
+void ListeFilms::enleverFilmListeFilms( Film* film) {
     const string nomFilm = film->titre;
     for (int i = 0; i < nElements_; ++i) {
         bool filmTrouve = nomFilm == elements_[i]->titre;
@@ -125,7 +125,7 @@ void ListeFilms::enleverFilmListeFilms(ListeFilms& listeFilms, Film* film) {
         }
     }
 }
-Acteur* trouverActeurListeFilms(const ListeFilms& listeFilms, const string& nomActeur) {
+Acteur* ListeFilms::trouverActeurListeFilms(const string& nomActeur) {
     for (auto* filmDansListe : span(listeFilms.getElements(), listeFilms.getNElements())) {
         for (int valeur : range(filmDansListe->acteurs.nElements)) {
             bool acteurTrouve = filmDansListe->acteurs.elements[valeur]->nom == nomActeur;
@@ -269,17 +269,17 @@ void afficherFilmographieActeur(const ListeFilms& listeFilms, const string& nomA
 
 
 int main()
-{
+{   
     bibliotheque_cours::activerCouleursAnsi();  // Permet sous Windows les "ANSI escape code" pour changer de couleurs https://en.wikipedia.org/wiki/ANSI_escape_code ; les consoles Linux/Mac les supportent normalement par défaut.
-
+    ListeFilms listeFilms;
     static const string ligneDeSeparation = "\n\033[35m════════════════════════════════════════\033[0m\n";
 
 
     //TODO: La ligne suivante devrait lire le fichier binaire en allouant la mémoire nécessaire.
     // Devrait afficher les noms de 20 acteurs sans doublons
     // (par l'affichage pour fins de débogage dans votre fonction lireActeur).
-    ListeFilms listeFilms = listeFilms.creerListe("films.bin");
-
+    listeFilms.creerListe("films.bin");
+   
 
     cout << ligneDeSeparation << "Le premier film de la liste est:" << endl;
     //TODO: Afficher le premier film de la liste.  Devrait être Alien.
@@ -290,7 +290,7 @@ int main()
     listeFilms.afficherListeFilms(listeFilms);
 
     //TODO: Modifier l'année de naissance de Benedict Cumberbatch pour être 1976 (elle était 0 dans les données lues du fichier).
-    Acteur* benedict_Cumberbacth = trouverActeurListeFilms(listeFilms, "Benedict Cumberbatch");
+    Acteur* benedict_Cumberbacth = listeFilms.trouverActeurListeFilms("Benedict Cumberbatch");
     benedict_Cumberbacth->anneeNaissance = 1976;
 
     cout << ligneDeSeparation << "Liste des films où Benedict Cumberbatch joue sont:" << endl;
@@ -315,5 +315,5 @@ int main()
     // La bibliothèque de verification_allocation devrait afficher "Aucune fuite detectee."
     // a la sortie du programme; il affichera "Fuite detectee:" avec la liste des blocs, s'il manque
     // des delete.
-    listeFilms.detruireListeFilms(listeFilms);
+    
 }
