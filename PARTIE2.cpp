@@ -240,7 +240,7 @@ Acteur* lireActeur(istream& fichier, const  ListeFilms& listeFilms)
 
     bool acteurEstPtrNull = acteurExistant == nullptr;
     if (acteurEstPtrNull) {
-        cout << "Nom de l'acteur ajouté: " << acteur.nom << '\n';
+        cout << "Nom de l'acteur ajouté: " << acteur.nom << " " << acteur.anneeNaissance << '\n';
         Acteur* acteurCree = new Acteur;
         *acteurCree = acteur;
         return acteurCree;
