@@ -101,7 +101,7 @@ Acteur* trouverActeurListeFilms(const ListeFilms& listeFilms, const string& nomA
     return nullptr;
 }
 
-Acteur* lireActeur(istream& fichier,const  ListeFilms& listeFilms)
+Acteur* lireActeur(istream& fichier, const  ListeFilms& listeFilms)
 {
     Acteur acteur = {};
     acteur.nom = lireString(fichier);
@@ -112,7 +112,7 @@ Acteur* lireActeur(istream& fichier,const  ListeFilms& listeFilms)
 
     bool acteurEstPtrNull = acteurExistant == nullptr;
     if (acteurEstPtrNull) {
-        cout << "Nom de l'acteur ajouté: " << acteur.nom << '\n';
+        cout << "Nom de l'acteur ajouté: " << acteur.nom << " " << acteur.anneeNaissance << '\n';
         Acteur* acteurCree = new Acteur;
         *acteurCree = acteur;
         return acteurCree;
@@ -131,17 +131,17 @@ Film* lireFilm(istream& fichier, ListeFilms& listeFilms)
     film.recette = int(lireUintTailleVariable(fichier));
     film.acteurs.nElements = int(lireUintTailleVariable(fichier));
 
-    
+
     film.acteurs.elements = new Acteur * [film.acteurs.nElements];
 
     Film* newFilm = new Film(film);
-    
+
     for (int i = 0; i < film.acteurs.nElements; i++) {
         Acteur* ptrActeur = lireActeur(fichier, listeFilms);
         //Placer l'acteur au bon endroit dans les acteurs du film.
         film.acteurs.elements[i] = ptrActeur;
         //Ajouter le film à la liste des films dans lesquels l'acteur joue.
-        ajouterFilmListeFilms( ptrActeur->joueDans, newFilm);
+        ajouterFilmListeFilms(ptrActeur->joueDans, newFilm);
 
     }
     return newFilm;
@@ -163,9 +163,9 @@ ListeFilms creerListe(string nomFichier)
 }
 
 void detruireFilm(Film* film, ListeFilms& listeFilms) {
-    enleverFilmListeFilms( listeFilms, film );
+    enleverFilmListeFilms(listeFilms, film);
     for (Acteur* acteur : span(film->acteurs.elements, film->acteurs.nElements)) {
-        enleverFilmListeFilms( acteur->joueDans, film);
+        enleverFilmListeFilms(acteur->joueDans, film);
         if (acteur->joueDans.nElements == 0) {
             cout << "Destruction de l'acteur " << acteur->nom << endl;
             delete[] acteur->joueDans.elements;
@@ -237,8 +237,8 @@ int main()
     afficherListeFilms(listeFilms);
 
     //TODO: Modifier l'année de naissance de Benedict Cumberbatch pour être 1976 (elle était 0 dans les données lues du fichier).  Vous ne pouvez pas supposer l'ordre des films et des acteurs dans les listes, il faut y aller par son nom.
-    Acteur* benedictCumberbatch = trouverActeurListeFilms( listeFilms, "Benedict Cumberbatch" );
-    benedictCumberbatch->anneeNaissance = 1976;
+    Acteur* benedictCumberbatch = trouverActeurListeFilms(listeFilms, "Benedict Cumberbatch");
+    benedictCumberbatch-> anneeNaissance = 1976;
 
 
     cout << benedictCumberbatch->nom << " " << benedictCumberbatch->anneeNaissance << endl;
@@ -246,7 +246,7 @@ int main()
 
     //TODO: Afficher la liste des films où Benedict Cumberbatch joue.  Il devrait y avoir Le Hobbit et Le jeu de l'imitation.
 
-    afficherFilmographieActeur(listeFilms, "Benedict Cumberbatch");
+    afficherFilmographieActeur(listeFilms, benedictCumberbatch->nom);
 
     //TODO: Détruire et enlever le premier film de la liste (Alien).  Ceci devrait "automatiquement" (par ce que font vos fonctions) détruire les acteurs Tom Skerritt et John Hurt, mais pas Sigourney Weaver puisqu'elle joue aussi dans Avatar.
     detruireFilm(listeFilms.elements[0], listeFilms);
@@ -258,7 +258,7 @@ int main()
     // (aucune ligne rouge dans la couverture de code; c'est normal que les lignes de "new"
     // et "delete" soient jaunes).  Vous avez aussi le droit d'effacer les lignes du programmes
     // qui ne sont pas exécutée, si finalement vous pensez qu'elle ne sont pas utiles.
-    
+
     //TODO: Détruire tout avant de terminer le programme.
     // La bibliothèque de verification_allocation devrait afficher "Aucune fuite detectee."
     // a la sortie du programme; il affichera "Fuite detectee:" avec la liste des blocs, s'il manque
